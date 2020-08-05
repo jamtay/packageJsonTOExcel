@@ -33,29 +33,32 @@ const devOrProduction = (type) => {
 
 const getCSVStringFromDependency = (type) => {
   let returnString = "";
-  Object.entries(json[type]).forEach((dependency) => {
-    if (dependency[0].includes("@")) {
-      dependency[0] = dependency[0].replace("@", "");
-    }
 
-    const currentValue = result.Sheet1.find((row) => {
-      let rowName = row.name;
-      if (rowName.includes("@")) {
-        rowName = rowName.replace("@", "");
+  if (json && json[type]) {
+    Object.entries(json[type]).forEach((dependency) => {
+      if (dependency[0].includes("@")) {
+        dependency[0] = dependency[0].replace("@", "");
       }
-      return rowName === dependency[0];
-    });
 
-    if (currentValue) {
-      returnString += `"${dependency[0]}",${dependency[1]},${devOrProduction(
-        type
-      )},${currentValue.description}\n`;
-    } else {
-      returnString += `"${dependency[0]}",${dependency[1]},${devOrProduction(
-        type
-      )},\n`;
-    }
-  });
+      const currentValue = result.Sheet1.find((row) => {
+        let rowName = row.name;
+        if (rowName.includes("@")) {
+          rowName = rowName.replace("@", "");
+        }
+        return rowName === dependency[0];
+      });
+
+      if (currentValue) {
+        returnString += `"${dependency[0]}",${dependency[1]},${devOrProduction(
+          type
+        )},${currentValue.description}\n`;
+      } else {
+        returnString += `"${dependency[0]}",${dependency[1]},${devOrProduction(
+          type
+        )},\n`;
+      }
+    });
+  }
 
   return returnString;
 };
