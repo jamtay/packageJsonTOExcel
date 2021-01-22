@@ -1,23 +1,23 @@
 //USAGE: node index.js  currentExcelFileName outputFileName jsonfilepath
 console.warn(
-  "USAGE: node index.js  currentExcelFileName outputFileName jsonfilepath/package.json"
+  "USAGE: node index.js <directoryname>      // run from a direcotry next to the directory"
 );
-console.log("Do not include file extensions apart from package.json");
 console.log("Input is xlsx format and output is csv");
+console.log("Don't include a header in either file")
 const fs = require("fs");
 
 const currentExcelFile = process.argv[2];
-const outputFile = process.argv[3];
-const relativeJsonFilePath = process.argv[4];
+const outputFile = `${process.argv[2]}-output`;
+const relativeJsonFilePath = `../directory/${process.argv[2]}/package.json`;
 
 const json = require(relativeJsonFilePath);
 
 const excelToJson = require("convert-excel-to-json");
 
 const result = excelToJson({
-  sourceFile: `${currentExcelFile}.xlsx`,
+  sourceFile: `data/${currentExcelFile}.xlsx`,
   header: {
-    rows: 1,
+    rows: 0,
   },
   columnToKey: {
     A: "name",
@@ -67,6 +67,6 @@ const returnString =
   getCSVStringFromDependency("dependencies") +
   getCSVStringFromDependency("devDependencies");
 
-fs.writeFileSync(`${outputFile}.csv`, returnString, "binary");
+fs.writeFileSync(`data/${outputFile}.csv`, returnString, "binary");
 
 console.log("DONE");
